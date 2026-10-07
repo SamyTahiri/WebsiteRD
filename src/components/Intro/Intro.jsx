@@ -39,7 +39,7 @@ function Intro() {
   return (
     <div className={`intro${phase === 'leaving' ? ' is-leaving' : ''}`} aria-hidden="true">
       <div className="intro__inner">
-        <span className="label">Équipe 9406 · Recherche et développement</span>
+        <span className="label">Équipe 3990 · Recherche et développement</span>
         <span className="intro__count display">{String(count).padStart(3, '0')}</span>
         <span className="label">Vision et estimation de position</span>
       </div>

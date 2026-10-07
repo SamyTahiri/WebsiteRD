@@ -26,7 +26,7 @@ function TopBar() {
   return (
     <header className={`top-bar label${scrolled ? ' is-scrolled' : ''}`}>
       <a className="top-bar__brand" href="#top">
-        <strong>Équipe 9406</strong> · R&amp;D Vision
+        <strong>Équipe 3990</strong> · R&amp;D Vision
       </a>
       <span className="top-bar__current" aria-live="polite">
         {/* key: re-run the roll animation when the chapter changes */}
