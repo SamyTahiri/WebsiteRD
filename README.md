@@ -23,14 +23,28 @@ pnpm dev
 
 ```
 src/
-├── components/       # Reusable components (each with its own .jsx + .scss)
+├── components/           # One folder per block (.jsx + .scss)
+│   ├── TopBar/           # Top bar with "Sommaire" link
+│   ├── Hero/             # Big title + intro
+│   ├── ChapterStrip/     # Coral chapter tabs (Ch.1 → Ch.5)
+│   ├── ChapterFigure/    # Small drawings on each tab
+│   ├── Chapter/          # Coral panel + content (reused for each chapter)
+│   ├── Entries/          # Ruled label / text list
+│   ├── HypothesesLedger/ # Chapter 4, the H.1 → H.8 list
+│   ├── Epilogue/         # 31.10.2026 objective + countdown
+│   ├── NextSteps/        # Next steps
+│   └── Footer/
+├── data/content.js       # All page text (tests, criteria, hypotheses…)
+├── utils/daysUntil.js    # Countdown helper
 ├── styles/
-│   ├── _variables.scss   # Colors, spacing, breakpoints
-│   ├── _mixins.scss      # container, respond-to(...)
-│   └── global.scss       # Reset + base styles
-├── App.jsx
+│   ├── _variables.scss   # Colors, fonts, spacing, breakpoints
+│   ├── _mixins.scss      # respond-to, gutter, display-type, label-type
+│   └── global.scss       # Reset, base styles, .display / .label
+├── App.jsx               # Page layout
 └── main.jsx
 ```
+
+To change the text, edit `src/data/content.js` (or the chapter intros in `App.jsx`).
 
 Import shared styles in any component stylesheet with:
 

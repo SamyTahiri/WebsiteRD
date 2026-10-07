@@ -1,0 +1,30 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+
+.top-bar {
+  @include gutter;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding-block: 16px;
+  color: $color-muted;
+
+  strong {
+    color: $color-ink;
+  }
+
+  &__menu {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: $color-ink;
+    text-decoration: none;
+
+    i {
+      width: 18px;
+      height: 8px;
+      border-block: 2px solid $color-ink;
+    }
+  }
+}

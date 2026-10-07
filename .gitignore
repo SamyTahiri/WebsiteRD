@@ -25,3 +25,6 @@ pnpm-debug.log*
 .DS_Store
 *.suo
 *.sw?
+
+# Cloudflare
+.wrangler/

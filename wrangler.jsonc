@@ -1,0 +1,17 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "visionrd",
+  "compatibility_date": "2026-10-07",
+  // Static site: serve the Vite build output.
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "single-page-application"
+  },
+  // Cloudflare creates the DNS record and certificate for this subdomain on deploy.
+  "routes": [
+    {
+      "pattern": "visionrd.samyth.dev",
+      "custom_domain": true
+    }
+  ]
+}

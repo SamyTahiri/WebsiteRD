@@ -1,0 +1,25 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+
+.hero {
+  @include gutter;
+  display: grid;
+  gap: 20px 40px;
+  align-items: end;
+  padding-block: clamp(32px, 7vw, 88px) clamp(24px, 4vw, 48px);
+
+  @include respond-to(md) {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 17rem);
+  }
+
+  &__title {
+    font-size: clamp(3.6rem, 11.5vw, 10.5rem);
+    text-wrap: balance;
+  }
+
+  &__intro {
+    max-width: 40ch;
+    font-size: 16px;
+    line-height: 1.45;
+  }
+}

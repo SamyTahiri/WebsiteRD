@@ -1,0 +1,38 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+
+.chapter-figure {
+  display: grid;
+  gap: 6px;
+  width: 64px;
+  color: $color-ink;
+
+  @include respond-to(lg) {
+    width: min(120px, 70%);
+    margin: 6px auto 0;
+  }
+
+  svg {
+    width: 100%;
+    height: auto;
+    border: $rule;
+    // Halftone dots, like an old printed photo.
+    background:
+      radial-gradient(circle, rgba($color-ink, 0.28) 1px, transparent 1.4px) 0 0 / 5px 5px,
+      $color-paper;
+  }
+
+  &__paper {
+    fill: $color-paper;
+  }
+
+  figcaption {
+    display: none;
+    font: italic 13px/1.2 $font-body;
+    text-align: center;
+
+    @include respond-to(lg) {
+      display: block;
+    }
+  }
+}

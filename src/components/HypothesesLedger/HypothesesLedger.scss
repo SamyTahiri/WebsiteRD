@@ -1,0 +1,80 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+
+.ledger {
+  &__head {
+    @include gutter;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: end;
+    gap: 20px;
+    padding-block: $panel-padding;
+    background: $color-coral;
+    border-bottom: $rule;
+
+    p {
+      max-width: 34ch;
+      font-size: 17px;
+    }
+  }
+
+  &__title {
+    font-size: clamp(3.4rem, 9.5vw, 8.6rem);
+  }
+
+  &__list {
+    @include gutter;
+    border-bottom: $rule;
+  }
+
+  &__row {
+    display: grid;
+    grid-template-columns: 4.5rem minmax(0, 1fr);
+    gap: 6px 24px;
+    align-items: baseline;
+    padding-block: 18px;
+    border-top: $rule-thin;
+
+    &:first-child {
+      border-top: 0;
+    }
+
+    @include respond-to(md) {
+      grid-template-columns: 7rem minmax(0, 1fr) minmax(0, 15rem);
+    }
+  }
+
+  &__id {
+    font-size: clamp(2.4rem, 4vw, 3.4rem);
+    color: $color-coral-deep;
+
+    .ledger__row--first & {
+      color: $color-ink;
+    }
+  }
+
+  &__name {
+    font: 500 clamp(1.3rem, 2.2vw, 1.75rem)/1.2 $font-body;
+  }
+
+  &__badge {
+    @include label-type;
+    display: inline-block;
+    margin-left: 12px;
+    padding: 4px 8px;
+    vertical-align: middle;
+    background: $color-ink;
+    color: $color-paper;
+  }
+
+  &__note {
+    grid-column: 2;
+    font-size: 16px;
+    color: $color-muted;
+
+    @include respond-to(md) {
+      grid-column: auto;
+    }
+  }
+}

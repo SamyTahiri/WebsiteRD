@@ -1,4 +1,5 @@
 @use 'variables' as *;
+@use 'mixins' as *;
 
 *,
 *::before,
@@ -10,19 +11,35 @@
 
 html {
   -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+
+  @media (prefers-reduced-motion: reduce) {
+    scroll-behavior: auto;
+  }
 }
 
 body {
-  font-family: $font-family-base;
-  line-height: 1.6;
-  color: $color-text;
-  background-color: $color-bg;
+  font-family: $font-body;
+  font-size: 19px;
+  line-height: 1.55;
+  color: $color-ink;
+  background-color: $color-paper;
   -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
 }
 
 a {
   color: inherit;
-  text-decoration: none;
+
+  &:focus-visible {
+    outline: 2px solid $color-ink;
+    outline-offset: 3px;
+  }
+}
+
+ul,
+ol {
+  list-style: none;
 }
 
 img,
@@ -31,9 +48,16 @@ svg {
   max-width: 100%;
 }
 
-code {
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  background: $color-border;
-  padding: 0.1em 0.35em;
-  border-radius: 4px;
+::selection {
+  background: $color-ink;
+  color: $color-paper;
+}
+
+// Typography utilities
+.display {
+  @include display-type;
+}
+
+.label {
+  @include label-type;
 }

@@ -1,27 +1,26 @@
 // Colors
-$color-primary: #4f46e5;
-$color-text: #1f2937;
-$color-text-muted: #6b7280;
-$color-bg: #ffffff;
-$color-border: #e5e7eb;
+$color-paper: #eee6d8;
+$color-ink: #161312;
+$color-coral: #db5661;
+$color-coral-deep: #c9424e;
+$color-muted: #5a5249;
 
 // Typography
-$font-family-base: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+$font-display: 'Archivo', 'Arial Narrow', Impact, sans-serif;
+$font-body: 'Newsreader', Georgia, 'Times New Roman', serif;
+
+// Rules (borders)
+$rule: 2px solid $color-ink;
+$rule-thin: 1px solid $color-ink;
 
 // Spacing
-$space-xs: 0.25rem;
-$space-sm: 0.5rem;
-$space-md: 1rem;
-$space-lg: 2rem;
-$space-xl: 4rem;
+$gutter: clamp(16px, 3vw, 32px);
+$panel-padding: clamp(20px, 3.4vw, 44px);
 
-// Layout
-$container-max-width: 1200px;
-
-// Breakpoints
+// Breakpoints (mobile-first, used with respond-to)
 $breakpoints: (
-  sm: 640px,
+  sm: 480px,
   md: 768px,
-  lg: 1024px,
+  lg: 900px,
   xl: 1280px,
 );

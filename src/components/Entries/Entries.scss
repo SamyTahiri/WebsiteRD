@@ -1,0 +1,21 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+
+.entries {
+  border-top: $rule;
+
+  &__row {
+    display: grid;
+    gap: 4px 16px;
+    padding-block: 14px;
+    border-bottom: $rule-thin;
+
+    @include respond-to(sm) {
+      grid-template-columns: 7.5rem minmax(0, 1fr);
+    }
+  }
+
+  &__label {
+    padding-top: 6px;
+  }
+}
