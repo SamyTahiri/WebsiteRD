@@ -6,7 +6,7 @@
   border-block: $rule;
 
   @include respond-to(lg) {
-    grid-template-columns: repeat(5, minmax(0, 1fr));
+    grid-template-columns: repeat(6, minmax(0, 1fr));
   }
 
   &__item {
@@ -51,6 +51,15 @@
   }
 
   &__title {
-    font-size: clamp(1.9rem, 3.3vw, 3rem);
+    font-size: clamp(1.7rem, 2.7vw, 2.7rem);
+    overflow-wrap: anywhere;
+  }
+}
+
+// Motion
+@include motion-ok {
+  .chapter-strip__item {
+    animation: fade-up 0.8s $ease-out both;
+    animation-delay: calc(var(--intro) + 0.5s + var(--i) * 0.08s);
   }
 }

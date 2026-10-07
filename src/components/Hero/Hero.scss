@@ -23,3 +23,38 @@
     line-height: 1.45;
   }
 }
+
+@include motion-ok {
+  // Words rise out of their masks on load (after the intro curtain, if any).
+  .hero .split-word > span {
+    animation: rise-in 1.1s $ease-out both;
+    animation-delay: calc(var(--intro) + 0.1s + var(--w) * 0.08s);
+  }
+
+  .hero__intro {
+    animation: fade-up 0.9s $ease-out both;
+    animation-delay: calc(var(--intro) + 0.55s);
+  }
+}
+
+// The title drifts up and fades as the hero scrolls away.
+@supports (animation-timeline: view()) {
+  @include motion-ok {
+    .hero__title {
+      animation: hero-exit linear both;
+      animation-timeline: view();
+      animation-range: exit 0% exit 100%;
+    }
+  }
+}
+
+@keyframes hero-exit {
+  from {
+    translate: 0 0;
+    opacity: 1;
+  }
+  to {
+    translate: 0 -14vh;
+    opacity: 0.15;
+  }
+}

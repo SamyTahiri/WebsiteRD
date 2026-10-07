@@ -1,0 +1,30 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+
+.cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 200;
+  pointer-events: none;
+
+  &__bubble {
+    @include label-type;
+    position: absolute;
+    top: -44px;
+    left: -44px;
+    display: grid;
+    place-items: center;
+    width: 88px;
+    height: 88px;
+    border-radius: 50%;
+    background: $color-ink;
+    color: $color-paper;
+    transform: scale(0);
+    transition: transform 0.4s $ease-out;
+
+    &.is-active {
+      transform: scale(1);
+    }
+  }
+}

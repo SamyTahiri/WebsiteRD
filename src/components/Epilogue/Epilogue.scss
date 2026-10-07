@@ -29,3 +29,48 @@
     font-size: clamp(2rem, 4vw, 3.4rem);
   }
 }
+
+.epilogue__char {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  padding-block: 0.03em;
+
+  > span {
+    display: inline-block;
+  }
+}
+
+.epilogue__count {
+  display: inline-block;
+  min-width: 2ch;
+  font-variant-numeric: tabular-nums;
+}
+
+// Motion
+.motion {
+  .epilogue__label,
+  .epilogue__row {
+    @include reveal-hidden(0.1s);
+  }
+
+  .epilogue__row {
+    transition-delay: 0.7s;
+  }
+
+  .epilogue__char > span {
+    transform: translateY(110%);
+    transition: transform 0.9s $ease-out calc(0.15s + var(--i) * 0.06s);
+  }
+
+  .epilogue.is-revealed {
+    .epilogue__label,
+    .epilogue__row {
+      @include reveal-shown;
+    }
+
+    .epilogue__char > span {
+      transform: none;
+    }
+  }
+}

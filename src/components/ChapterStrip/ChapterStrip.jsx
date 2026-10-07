@@ -5,8 +5,14 @@ import './ChapterStrip.scss';
 function ChapterStrip() {
   return (
     <nav className="chapter-strip" id="sommaire" aria-label="Chapitres">
-      {chapters.map((chapter) => (
-        <a key={chapter.id} className="chapter-strip__item" href={`#${chapter.id}`}>
+      {chapters.map((chapter, i) => (
+        <a
+          key={chapter.id}
+          className="chapter-strip__item"
+          href={`#${chapter.id}`}
+          style={{ '--i': i }}
+          data-cursor="Lire"
+        >
           <span className="chapter-strip__text">
             <span className="label">{chapter.label}</span>
             <span className="chapter-strip__title display">{chapter.title}</span>

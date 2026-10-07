@@ -36,3 +36,110 @@
     }
   }
 }
+
+// Motion: the figure lifts like a print, and its drawing comes alive
+// while the surrounding link is hovered or focused.
+.fig-lens,
+.fig-ring {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+@include motion-ok {
+  .chapter-figure svg {
+    transition:
+      transform 0.4s $ease-out,
+      box-shadow 0.4s $ease-out;
+  }
+
+  .fig-dot {
+    transition: transform 0.6s $ease-out;
+  }
+
+  a:hover .chapter-figure,
+  a:focus-visible .chapter-figure {
+    svg {
+      transform: translate(-3px, -4px) rotate(-2deg);
+      box-shadow: 5px 6px 0 $color-ink;
+    }
+
+    .fig-path {
+      animation: fig-march 0.5s linear infinite;
+    }
+
+    // Close the gap between estimated and real pose.
+    .fig-dot {
+      transform: translate(-10px, 8px);
+    }
+
+    .fig-lens {
+      animation: fig-pulse 1.2s $ease-out infinite;
+    }
+
+    .fig-led {
+      animation: fig-flicker 0.8s steps(1) infinite;
+    }
+
+    .fig-tag {
+      animation: fig-flicker 0.9s steps(1) infinite;
+    }
+
+    .fig-ring {
+      animation: fig-spin 2.4s linear infinite;
+    }
+
+    .fig-check {
+      stroke-dasharray: 16;
+      animation: fig-draw 0.5s $ease-out both;
+
+      &:nth-of-type(2) {
+        animation-delay: 0.2s;
+      }
+    }
+
+    .fig-ring--reverse {
+      animation-direction: reverse;
+      animation-duration: 3.2s;
+    }
+  }
+}
+
+@keyframes fig-march {
+  to {
+    stroke-dashoffset: -18;
+  }
+}
+
+@keyframes fig-flicker {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  40% {
+    opacity: 0.15;
+  }
+  55% {
+    opacity: 1;
+  }
+  70% {
+    opacity: 0.4;
+  }
+}
+
+@keyframes fig-pulse {
+  50% {
+    transform: scale(1.18);
+  }
+}
+
+@keyframes fig-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes fig-draw {
+  from {
+    stroke-dashoffset: 16;
+  }
+}

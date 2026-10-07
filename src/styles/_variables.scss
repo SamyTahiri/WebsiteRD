@@ -17,6 +17,9 @@ $rule-thin: 1px solid $color-ink;
 $gutter: clamp(16px, 3vw, 32px);
 $panel-padding: clamp(20px, 3.4vw, 44px);
 
+// Motion
+$ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+
 // Breakpoints (mobile-first, used with respond-to)
 $breakpoints: (
   sm: 480px,

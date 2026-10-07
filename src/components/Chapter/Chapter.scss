@@ -49,9 +49,85 @@
       max-width: 60ch;
     }
 
+    // Stagger order for the motion below.
+    @for $i from 1 through 6 {
+      > :nth-child(#{$i}) {
+        --n: #{$i - 1};
+      }
+    }
+
     a {
       text-decoration-thickness: 2px;
       text-underline-offset: 3px;
+      transition: text-underline-offset 0.2s ease;
+
+      &:hover {
+        text-underline-offset: 6px;
+      }
+    }
+  }
+}
+
+// Motion: the coral panel wipes down, then its text and the body rise in.
+// The coral is drawn by ::before so the panel itself stays observable.
+.motion {
+  .chapter__panel {
+    position: relative;
+    isolation: isolate;
+    background: transparent;
+
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background: $color-coral;
+      transform: scaleY(0);
+      transform-origin: top;
+      transition: transform 1s $ease-out;
+    }
+  }
+
+  .chapter__label {
+    @include reveal-hidden(0.15s);
+  }
+
+  .chapter__title {
+    --reveal-delay: 0.25s;
+  }
+
+  .chapter__subtitle {
+    @include reveal-hidden(0.45s);
+  }
+
+  .chapter__panel.is-revealed {
+    &::before {
+      transform: none;
+    }
+
+    .chapter__label,
+    .chapter__subtitle {
+      @include reveal-shown;
+    }
+  }
+
+  // Lists animate row by row (see Entries), so only their siblings move as a block.
+  .chapter__body > :not(.entries, .solution-list) {
+    @include reveal-hidden(calc(0.2s + var(--n, 0) * 0.12s));
+  }
+
+  .chapter__body.is-revealed > :not(.entries, .solution-list) {
+    @include reveal-shown;
+  }
+}
+
+// Titles drift slightly against the scroll for depth.
+@supports (animation-timeline: view()) {
+  @include motion-ok {
+    .chapter__title {
+      animation: drift linear both;
+      animation-timeline: view();
+      animation-range: cover;
     }
   }
 }

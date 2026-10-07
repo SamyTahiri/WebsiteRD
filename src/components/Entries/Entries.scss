@@ -19,3 +19,14 @@
     padding-top: 6px;
   }
 }
+
+// Motion: rows appear one after another once the surrounding block is revealed.
+.motion {
+  .entries__row {
+    @include reveal-hidden(calc(0.3s + var(--i) * 0.08s), 16px);
+  }
+
+  .is-revealed .entries__row {
+    @include reveal-shown;
+  }
+}

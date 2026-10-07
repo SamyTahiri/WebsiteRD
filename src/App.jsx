@@ -1,17 +1,59 @@
+import { useCallback, useEffect, useState } from 'react';
+import Intro from './components/Intro/Intro';
+import Cursor from './components/Cursor/Cursor';
 import TopBar from './components/TopBar/TopBar';
 import Hero from './components/Hero/Hero';
 import ChapterStrip from './components/ChapterStrip/ChapterStrip';
 import Chapter from './components/Chapter/Chapter';
 import Entries from './components/Entries/Entries';
 import HypothesesLedger from './components/HypothesesLedger/HypothesesLedger';
+import SolutionList from './components/SolutionList/SolutionList';
+import Ticker from './components/Ticker/Ticker';
 import Epilogue from './components/Epilogue/Epilogue';
-import NextSteps from './components/NextSteps/NextSteps';
+import SolutionTracker from './components/SolutionTracker/SolutionTracker';
 import Footer from './components/Footer/Footer';
-import { TESTS_DOC_URL, tests, criteria, hardware, solutions } from './data/content';
+import { useScrollReveal } from './hooks/useScrollReveal';
+import { scrollToElement, startSmoothScroll, stopSmoothScroll } from './lib/smoothScroll';
+import { TESTS_DOC_URL, tests, criteria, hardware, solutionTracks } from './data/content';
+
+const HASH_PREFIX = '#solution-';
+
+// A link like visionrd.samyth.dev/#solution-navx3 opens that solution's tab.
+function solutionFromHash() {
+  const id = window.location.hash.startsWith(HASH_PREFIX)
+    ? window.location.hash.slice(HASH_PREFIX.length)
+    : null;
+  return solutionTracks.some((track) => track.id === id) ? id : null;
+}
 
 function App() {
+  const [activeSolution, setActiveSolution] = useState(() => solutionFromHash() ?? solutionTracks[0].id);
+
+  useScrollReveal();
+
+  useEffect(() => {
+    startSmoothScroll();
+    if (solutionFromHash()) scrollToElement(document.getElementById('suivi'), { immediate: true });
+    return stopSmoothScroll;
+  }, []);
+
+  const selectSolution = useCallback((id) => {
+    setActiveSolution(id);
+    window.history.replaceState(null, '', `${HASH_PREFIX}${id}`);
+  }, []);
+
+  const openSolution = useCallback(
+    (id) => {
+      selectSolution(id);
+      scrollToElement(document.getElementById('suivi'));
+    },
+    [selectSolution],
+  );
+
   return (
     <>
+      <Intro />
+      <Cursor />
       <TopBar />
       <main>
         <Hero />
@@ -24,12 +66,12 @@ function App() {
           subtitle="Ce qui arrive en match, reproduit sur demande"
         >
           <p>
-            Nos expériences reposent sur une série de tests choisis parce qu'ils reproduisent la
+            Nos expériences reposent sur une série de tests choisis parce qu’ils reproduisent la
             plupart des situations qui peuvent survenir durant un match de compétition.
           </p>
           <Entries items={tests} />
           <p>
-            <a href={TESTS_DOC_URL} target="_blank" rel="noreferrer">
+            <a href={TESTS_DOC_URL} target="_blank" rel="noreferrer" data-cursor="Ouvrir">
               Consulter le document des tests ↗
             </a>
           </p>
@@ -57,8 +99,8 @@ function App() {
         >
           <Entries items={hardware} />
           <p>
-            Chaque test est d'abord fait avec la configuration actuelle du robot. Nous gardons une
-            vidéo de chaque test et l'estimation de position pendant celui-ci.
+            Chaque test est d’abord fait avec la configuration actuelle du robot. Nous gardons une
+            vidéo de chaque test et l’estimation de position pendant celui-ci.
           </p>
           <p>
             Ensuite, nous testons une hypothèse à la fois en refaisant tous les tests. Si les
@@ -70,11 +112,16 @@ function App() {
         <HypothesesLedger />
 
         <Chapter id="solutions" number={5} title="Solutions" subtitle="Sept pistes pour la suite">
-          <Entries items={solutions} />
+          <p>
+            Clique sur une solution pour voir son suivi : ce qu’on a fait, où on en est et ce qui
+            reste.
+          </p>
+          <SolutionList onOpen={openSolution} />
         </Chapter>
 
+        <Ticker />
         <Epilogue />
-        <NextSteps />
+        <SolutionTracker activeId={activeSolution} onSelect={selectSolution} />
       </main>
       <Footer />
     </>

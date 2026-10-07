@@ -78,3 +78,49 @@
     }
   }
 }
+
+// Motion
+.ledger__id {
+  display: inline-block;
+}
+
+@include motion-ok {
+  .ledger__id {
+    transition: transform 0.3s $ease-out;
+  }
+
+  .ledger__row:hover .ledger__id {
+    transform: translateX(8px);
+  }
+
+  // "Première à l'essai": a blinking square, like a recording light.
+  .ledger__badge::before {
+    content: '';
+    display: inline-block;
+    width: 0.6em;
+    height: 0.6em;
+    margin-right: 0.6em;
+    background: $color-coral;
+    animation: badge-blink 1.4s steps(1) infinite;
+  }
+}
+
+.motion {
+  .ledger__head .label,
+  .ledger__head > p {
+    @include reveal-hidden(0.2s);
+  }
+
+  .ledger__head.is-revealed .label,
+  .ledger__head.is-revealed > p {
+    @include reveal-shown;
+  }
+
+  .ledger__row {
+    @include reveal-hidden(calc(var(--i) * 0.07s));
+  }
+
+  .ledger__row.is-revealed {
+    @include reveal-shown;
+  }
+}

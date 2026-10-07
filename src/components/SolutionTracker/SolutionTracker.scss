@@ -1,0 +1,479 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+
+// ---------- Head ----------
+.tracker__head {
+  @include gutter;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: end;
+  gap: 24px 40px;
+  padding-block: $panel-padding;
+  background: $color-coral;
+  border-bottom: $rule;
+}
+
+.tracker__heading {
+  font-size: clamp(3.4rem, 9.5vw, 8.6rem);
+}
+
+.tracker__overview {
+  display: grid;
+  gap: 12px;
+  width: 100%;
+  max-width: 26rem;
+
+  > p:first-child {
+    font-size: 17px;
+  }
+}
+
+// One segment per solution, filled according to its status.
+.tracker__bar {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  gap: 4px;
+  height: 12px;
+}
+
+.tracker__segment {
+  border: 1.5px solid $color-ink;
+  transform-origin: left;
+
+  &--en-cours {
+    background: repeating-linear-gradient(-45deg, $color-ink 0 2px, transparent 2px 5px);
+  }
+
+  &--validee {
+    background: $color-ink;
+  }
+
+  &--rejetee {
+    border-style: dashed;
+    opacity: 0.5;
+  }
+}
+
+// ---------- Tabs ----------
+.tracker__body {
+  display: grid;
+  border-bottom: $rule;
+
+  @include respond-to(lg) {
+    grid-template-columns: minmax(0, 20rem) minmax(0, 1fr);
+  }
+}
+
+.tracker__tabs {
+  position: relative;
+  display: flex;
+  overflow-x: auto;
+  scrollbar-width: none;
+  border-bottom: $rule;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  @include respond-to(lg) {
+    flex-direction: column;
+    overflow: visible;
+    border-bottom: 0;
+    border-right: $rule;
+  }
+}
+
+.tracker__tab {
+  position: relative;
+  z-index: 1;
+  flex: 0 0 auto;
+  display: grid;
+  justify-items: start;
+  gap: 8px;
+  width: min(15rem, 72vw);
+  padding: 16px clamp(16px, 3vw, 24px);
+  font: inherit;
+  text-align: left;
+  color: $color-ink;
+  background: none;
+  border: 0;
+  border-right: $rule-thin;
+  cursor: pointer;
+  transition: color 0.35s ease;
+
+  @include respond-to(lg) {
+    width: auto;
+    border-right: 0;
+    border-bottom: $rule-thin;
+  }
+
+  &:hover:not([aria-selected='true']) {
+    background: rgba($color-ink, 0.05);
+  }
+
+  &:focus-visible {
+    outline: 2px solid $color-coral;
+    outline-offset: -5px;
+  }
+
+  &[aria-selected='true'] {
+    color: $color-paper;
+
+    .status-chip {
+      border-color: $color-paper;
+      color: $color-paper;
+    }
+
+    .status-chip--en-cours {
+      border-color: $color-coral;
+      color: $color-ink;
+    }
+  }
+}
+
+.tracker__tab-title {
+  font-size: clamp(1.4rem, 2.2vw, 1.9rem);
+}
+
+// Ink block that slides behind the selected tab.
+.tracker__indicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  width: var(--w);
+  height: var(--h);
+  background: $color-ink;
+  transform: translate(var(--x), var(--y));
+  transition:
+    transform 0.55s $ease-out,
+    width 0.55s $ease-out,
+    height 0.55s $ease-out;
+}
+
+// ---------- Panel ----------
+.tracker__panel {
+  min-width: 0;
+  padding: $panel-padding;
+
+  &:focus-visible {
+    outline: 2px solid $color-ink;
+    outline-offset: -6px;
+  }
+}
+
+.tracker__content {
+  display: grid;
+  gap: clamp(32px, 4vw, 52px);
+}
+
+.tracker__intro {
+  display: grid;
+  justify-items: start;
+  gap: 12px;
+  max-width: 52rem;
+}
+
+.tracker__title {
+  font-size: clamp(2.8rem, 7vw, 6rem);
+}
+
+.tracker__name {
+  font: italic 1.25rem/1.4 $font-body;
+}
+
+.tracker__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 16px;
+}
+
+.tracker__summary {
+  max-width: 58ch;
+}
+
+.tracker__grid {
+  display: grid;
+  gap: clamp(32px, 4vw, 48px);
+
+  @include respond-to(xl) {
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  }
+}
+
+.tracker__side {
+  display: grid;
+  align-content: start;
+  gap: clamp(32px, 4vw, 44px);
+}
+
+.tracker__block {
+  display: grid;
+  align-content: start;
+  gap: 18px;
+}
+
+.tracker__block-title {
+  padding-bottom: 10px;
+  border-bottom: $rule;
+}
+
+.tracker__empty {
+  font-style: italic;
+  color: $color-muted;
+}
+
+// ---------- Process timeline ----------
+.process {
+  --node: 22px;
+  --gap: 24px;
+  display: grid;
+  gap: var(--gap);
+
+  &__step {
+    position: relative;
+    display: grid;
+    grid-template-columns: var(--node) minmax(0, 1fr);
+    gap: 16px;
+
+    // Line down to the next step: solid once this step is done.
+    &:not(:last-child)::before {
+      content: '';
+      position: absolute;
+      top: calc(var(--node) / 2);
+      bottom: calc(-1 * (var(--gap) + var(--node) / 2));
+      left: calc(var(--node) / 2 - 1px);
+      width: 2px;
+      background: repeating-linear-gradient($color-ink 0 4px, transparent 4px 8px);
+      opacity: 0.45;
+      transform-origin: top;
+    }
+
+    &--fait::before {
+      background: $color-ink;
+      opacity: 1;
+    }
+  }
+
+  &__node {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    place-items: center;
+    width: var(--node);
+    height: var(--node);
+    border: 2px solid $color-ink;
+    border-radius: 50%;
+    background: $color-paper;
+    color: $color-paper;
+
+    svg {
+      width: 13px;
+    }
+
+    .process__step--fait & {
+      background: $color-ink;
+    }
+
+    .process__step--en-cours & {
+      background: $color-coral;
+
+      &::after {
+        content: '';
+        position: absolute;
+        inset: -2px;
+        border: 2px solid $color-coral;
+        border-radius: 50%;
+      }
+    }
+  }
+
+  &__text {
+    min-width: 0;
+
+    p {
+      font-size: 16px;
+      color: $color-muted;
+    }
+  }
+
+  &__title {
+    margin-block: 4px 6px;
+    font-size: clamp(1.35rem, 2vw, 1.75rem);
+  }
+}
+
+// ---------- Log ----------
+.log {
+  li {
+    display: grid;
+    gap: 4px 14px;
+    padding-block: 12px;
+    border-bottom: $rule-thin;
+
+    @include respond-to(sm) {
+      grid-template-columns: 6rem minmax(0, 1fr);
+    }
+  }
+
+  p {
+    font-size: 16px;
+  }
+
+  &__tag {
+    padding-top: 4px;
+  }
+}
+
+// ---------- Results ----------
+.results {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  &__cell {
+    display: grid;
+    align-content: start;
+    gap: 6px;
+    min-width: 0;
+    padding: 12px 14px 14px 0;
+    border-bottom: $rule-thin;
+
+    &:nth-child(even) {
+      padding-left: 14px;
+      border-left: $rule-thin;
+    }
+  }
+
+  dd {
+    display: grid;
+    gap: 2px;
+  }
+
+  &__name {
+    font-size: 15px;
+    line-height: 1.3;
+  }
+
+  &__value {
+    font-size: clamp(2.2rem, 3.4vw, 3rem);
+
+    small {
+      font-size: 0.45em;
+    }
+  }
+
+  &__note {
+    font-size: 13px;
+    font-style: italic;
+    color: $color-muted;
+  }
+}
+
+// ---------- Motion ----------
+@include motion-ok {
+  .process__step--en-cours .process__node::after {
+    animation: node-ping 1.8s $ease-out infinite;
+  }
+
+  // Panel content plays in on every tab change (the content is remounted).
+  .tracker__intro,
+  .tracker__block {
+    animation: fade-up 0.7s $ease-out both;
+    animation-delay: calc(var(--k) * 0.1s);
+  }
+
+  .tracker__title {
+    animation: clip-up 0.9s $ease-out both;
+  }
+
+  .process__step {
+    animation: fade-up 0.6s $ease-out both;
+    animation-delay: calc(0.15s + var(--s) * 0.08s);
+
+    &::before {
+      animation: grow-y 0.8s $ease-out both;
+      animation-delay: calc(0.35s + var(--s) * 0.1s);
+    }
+  }
+
+  .results__cell {
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background: rgba($color-coral, 0.18);
+    }
+  }
+}
+
+// Hold the first play until the tracker scrolls into view.
+.motion .tracker__body:not(.is-revealed) .tracker__content,
+.motion .tracker__body:not(.is-revealed) .tracker__content * {
+  animation-play-state: paused;
+}
+
+.motion {
+  .tracker__head > div > .label,
+  .tracker__overview > p {
+    @include reveal-hidden(0.15s);
+  }
+
+  .tracker__segment {
+    transform: scaleX(0);
+    transition: transform 0.6s $ease-out calc(0.35s + var(--i) * 0.06s);
+  }
+
+  .tracker__head.is-revealed {
+    .label,
+    .tracker__overview > p {
+      @include reveal-shown;
+    }
+
+    .tracker__segment {
+      transform: none;
+    }
+  }
+
+  .tracker__tab {
+    @include reveal-hidden(calc(var(--i) * 0.05s), 16px);
+    // Keep the colour change when the indicator moves.
+    transition:
+      opacity 0.7s ease calc(var(--i) * 0.05s),
+      transform 0.9s $ease-out calc(var(--i) * 0.05s),
+      color 0.35s ease;
+  }
+
+  .tracker__body.is-revealed .tracker__tab {
+    @include reveal-shown;
+  }
+}
+
+@keyframes node-ping {
+  from {
+    transform: scale(1);
+    opacity: 1;
+  }
+  to {
+    transform: scale(2.1);
+    opacity: 0;
+  }
+}
+
+@keyframes clip-up {
+  from {
+    clip-path: inset(100% 0 0 0);
+    transform: translateY(24px);
+  }
+  to {
+    clip-path: inset(-20% 0 -20% 0);
+    transform: none;
+  }
+}
+
+@keyframes grow-y {
+  from {
+    transform: scaleY(0);
+  }
+}

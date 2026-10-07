@@ -29,3 +29,25 @@
   letter-spacing: 0.1em;
   text-transform: uppercase;
 }
+
+// Only animate for people who haven't asked their device to reduce motion.
+@mixin motion-ok {
+  @media (prefers-reduced-motion: no-preference) {
+    @content;
+  }
+}
+
+// Scroll reveal states. Hidden styles go under `.motion` (set by useScrollReveal),
+// shown styles under `.motion … .is-revealed`.
+@mixin reveal-hidden($delay: 0s, $y: 24px) {
+  opacity: 0;
+  transform: translateY($y);
+  transition:
+    opacity 0.7s ease $delay,
+    transform 0.9s $ease-out $delay;
+}
+
+@mixin reveal-shown {
+  opacity: 1;
+  transform: none;
+}

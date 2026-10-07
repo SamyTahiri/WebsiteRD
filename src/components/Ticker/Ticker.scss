@@ -1,0 +1,59 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+
+.ticker {
+  overflow: hidden;
+  padding-block: 14px;
+  background: $color-ink;
+  color: $color-paper;
+  border-bottom: $rule;
+
+  &__track {
+    display: flex;
+    width: max-content;
+  }
+
+  &__group {
+    display: flex;
+  }
+
+  &__item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.9em;
+    padding-right: 0.9em;
+    font-size: clamp(1.4rem, 2.6vw, 2.2rem);
+    white-space: nowrap;
+
+    // Small coral square between terms.
+    &::after {
+      content: '';
+      width: 0.32em;
+      height: 0.32em;
+      background: $color-coral;
+    }
+  }
+}
+
+@include motion-ok {
+  .ticker__track {
+    animation: ticker-scroll 45s linear infinite;
+  }
+
+  .ticker:hover .ticker__track {
+    animation-play-state: paused;
+  }
+
+  // Leans with the scroll speed (set by smooth scrolling).
+  .ticker__group {
+    transform: skewX(calc(var(--scroll-velocity, 0) * -0.35deg));
+    transition: transform 0.35s $ease-out;
+  }
+}
+
+// The track holds two identical groups, so moving by half loops seamlessly.
+@keyframes ticker-scroll {
+  to {
+    transform: translateX(-50%);
+  }
+}
