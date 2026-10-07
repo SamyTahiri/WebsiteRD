@@ -1,0 +1,33 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+
+.header {
+  border-bottom: 1px solid $color-border;
+
+  &__inner {
+    @include container;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+  }
+
+  &__logo {
+    font-weight: 700;
+    font-size: 1.25rem;
+    color: $color-primary;
+  }
+
+  &__nav {
+    display: flex;
+    gap: $space-md;
+
+    a {
+      color: $color-text;
+
+      &:hover {
+        color: $color-primary;
+      }
+    }
+  }
+}

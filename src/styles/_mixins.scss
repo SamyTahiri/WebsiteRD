@@ -1,0 +1,16 @@
+@use 'sass:map';
+@use 'variables' as *;
+
+@mixin container {
+  width: 100%;
+  max-width: $container-max-width;
+  margin-inline: auto;
+  padding-inline: $space-md;
+}
+
+// Usage: @include respond-to(md) { ... }
+@mixin respond-to($breakpoint) {
+  @media (min-width: map.get($breakpoints, $breakpoint)) {
+    @content;
+  }
+}
