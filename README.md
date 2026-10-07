@@ -7,17 +7,17 @@ Website built with [React](https://react.dev), [SCSS](https://sass-lang.com) and
 Requires [Node.js](https://nodejs.org) 20.19+ or 22.12+.
 
 ```bash
-npm install
-npm run dev
+pnpm install
+pnpm dev
 ```
 
 ## Scripts
 
-| Command           | Description                        |
-| ----------------- | ---------------------------------- |
-| `npm run dev`     | Start the dev server               |
-| `npm run build`   | Build for production into `dist/`  |
-| `npm run preview` | Preview the production build       |
+| Command        | Description                       |
+| -------------- | --------------------------------- |
+| `pnpm dev`     | Start the dev server              |
+| `pnpm build`   | Build for production into `dist/` |
+| `pnpm preview` | Preview the production build      |
 
 ## Structure
 
