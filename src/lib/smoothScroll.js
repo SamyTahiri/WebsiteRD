@@ -35,8 +35,18 @@ export function resumeScroll() {
 export function scrollToElement(el, { immediate = false } = {}) {
   if (!el) return;
   if (lenis) {
-    lenis.scrollTo(el, { duration: 1.4, immediate });
+    if (immediate) lenis.resize(); // the page may have just changed height
+    lenis.scrollTo(el, { duration: 1.4, immediate, force: immediate });
   } else {
     el.scrollIntoView({ behavior: immediate || reduceMotion() ? 'auto' : 'smooth', block: 'start' });
+  }
+}
+
+export function scrollToTop() {
+  if (lenis) {
+    lenis.resize();
+    lenis.scrollTo(0, { immediate: true, force: true });
+  } else {
+    window.scrollTo(0, 0);
   }
 }

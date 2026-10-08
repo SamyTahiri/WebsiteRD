@@ -1,19 +1,20 @@
 import { useEffect, useState } from 'react';
+import Link from '../Link/Link';
 import { chapters } from '@/data/content';
 import { useActiveSection } from '@/hooks/useActiveSection';
 import './TopBar.scss';
 
-// Sections in page order, with the name shown in the bar.
+// Sections of the report in page order, with the name shown in the bar.
 const SECTIONS = [
   ...chapters.filter((c) => c.id !== 'suivi').map((c) => ({ id: c.id, name: `${c.label} · ${c.title}` })),
   { id: 'objectif', name: 'Objectif' },
-  { id: 'suivi', name: 'Ch.6 · Suivi' },
 ];
 const SECTION_IDS = SECTIONS.map((s) => s.id);
+const NO_SECTIONS = [];
 
-function TopBar() {
-  const activeId = useActiveSection(SECTION_IDS);
-  const active = SECTIONS.find((s) => s.id === activeId);
+function TopBar({ page }) {
+  const activeId = useActiveSection(page === 'home' ? SECTION_IDS : NO_SECTIONS);
+  const current = page === 'suivi' ? { id: 'suivi', name: 'Ch.6 · Suivi' } : SECTIONS.find((s) => s.id === activeId);
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -25,16 +26,16 @@ function TopBar() {
 
   return (
     <header className={`top-bar label${scrolled ? ' is-scrolled' : ''}`}>
-      <a className="top-bar__brand" href="#top">
+      <Link className="top-bar__brand" to={page === 'home' ? '#top' : '/'}>
         <strong>Équipe 3990</strong> · R&amp;D Vision
-      </a>
+      </Link>
       <span className="top-bar__current" aria-live="polite">
         {/* key: re-run the roll animation when the chapter changes */}
-        <span key={active?.id ?? 'none'}>{active?.name ?? ''}</span>
+        <span key={current?.id ?? 'none'}>{current?.name ?? ''}</span>
       </span>
-      <a className="top-bar__menu" href="#sommaire">
+      <Link className="top-bar__menu" to={page === 'home' ? '#sommaire' : '/#sommaire'}>
         Sommaire <i aria-hidden="true" />
-      </a>
+      </Link>
     </header>
   );
 }

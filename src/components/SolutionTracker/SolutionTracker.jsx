@@ -1,4 +1,5 @@
 import { useLayoutEffect, useRef, useState } from 'react';
+import Link from '../Link/Link';
 import SplitWords from '../SplitWords/SplitWords';
 import StatusChip from '../StatusChip/StatusChip';
 import TrackerPanel from './TrackerPanel';
@@ -57,6 +58,9 @@ function SolutionTracker({ activeId, onSelect }) {
     <section className="tracker" id="suivi" aria-labelledby="suivi-title">
       <div className="tracker__head" data-reveal>
         <div>
+          <Link className="tracker__back label" to="/#solutions" data-cursor="Retour">
+            ← Ch.5 · Solutions
+          </Link>
           <span className="label">Chapitre 6</span>
           <h2 className="tracker__heading display" id="suivi-title">
             <SplitWords text="Suivi" />

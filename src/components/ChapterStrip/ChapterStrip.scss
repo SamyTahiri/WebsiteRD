@@ -16,7 +16,7 @@
     gap: 14px;
     min-width: 0;
     padding: 14px;
-    background: $color-coral;
+    background: $color-yellow;
     color: $color-ink;
     text-decoration: none;
     border-bottom: $rule;
@@ -27,7 +27,7 @@
     }
 
     &:hover {
-      background: $color-coral-deep;
+      background: $color-yellow-deep;
     }
 
     @include respond-to(lg) {

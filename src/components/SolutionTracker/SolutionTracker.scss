@@ -10,8 +10,21 @@
   align-items: end;
   gap: 24px 40px;
   padding-block: $panel-padding;
-  background: $color-coral;
+  background: $color-yellow;
   border-bottom: $rule;
+}
+
+// Back to the report (Suivi is its own page).
+.tracker__back {
+  display: block;
+  width: fit-content;
+  margin-bottom: 20px;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
 }
 
 .tracker__heading {
@@ -114,7 +127,7 @@
   }
 
   &:focus-visible {
-    outline: 2px solid $color-coral;
+    outline: 2px solid $color-yellow;
     outline-offset: -5px;
   }
 
@@ -127,7 +140,7 @@
     }
 
     .status-chip--en-cours {
-      border-color: $color-coral;
+      border-color: $color-yellow;
       color: $color-ink;
     }
   }
@@ -279,13 +292,13 @@
     }
 
     .process__step--en-cours & {
-      background: $color-coral;
+      background: $color-yellow;
 
       &::after {
         content: '';
         position: absolute;
         inset: -2px;
-        border: 2px solid $color-coral;
+        border: 2px solid $color-yellow;
         border-radius: 50%;
       }
     }
@@ -403,7 +416,7 @@
     transition: background-color 0.3s ease;
 
     &:hover {
-      background: rgba($color-coral, 0.18);
+      background: rgba($color-yellow, 0.18);
     }
   }
 }

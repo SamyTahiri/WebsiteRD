@@ -17,7 +17,7 @@
     gap: 48px;
     min-width: 0;
     padding: $panel-padding;
-    background: $color-coral;
+    background: $color-yellow;
     border-bottom: $rule;
 
     @include respond-to(lg) {
@@ -68,8 +68,8 @@
   }
 }
 
-// Motion: the coral panel wipes down, then its text and the body rise in.
-// The coral is drawn by ::before so the panel itself stays observable.
+// Motion: the yellow panel wipes down, then its text and the body rise in.
+// The yellow is drawn by ::before so the panel itself stays observable.
 .motion {
   .chapter__panel {
     position: relative;
@@ -81,7 +81,7 @@
       position: absolute;
       inset: 0;
       z-index: -1;
-      background: $color-coral;
+      background: $color-yellow;
       transform: scaleY(0);
       transform-origin: top;
       transition: transform 1s $ease-out;

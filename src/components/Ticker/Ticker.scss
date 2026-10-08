@@ -25,12 +25,12 @@
     font-size: clamp(1.4rem, 2.6vw, 2.2rem);
     white-space: nowrap;
 
-    // Small coral square between terms.
+    // Small yellow square between terms.
     &::after {
       content: '';
       width: 0.32em;
       height: 0.32em;
-      background: $color-coral;
+      background: $color-yellow;
     }
   }
 }

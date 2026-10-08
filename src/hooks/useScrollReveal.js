@@ -2,7 +2,8 @@ import { useLayoutEffect } from 'react';
 
 // Adds "is-revealed" to each [data-reveal] element the first time it scrolls into view.
 // Hidden states only apply under html.motion, which is skipped for reduced motion.
-export function useScrollReveal() {
+// Pass the current page so a newly shown page is observed too.
+export function useScrollReveal(page) {
   useLayoutEffect(() => {
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduceMotion || !('IntersectionObserver' in window)) return undefined;
@@ -27,5 +28,5 @@ export function useScrollReveal() {
       observer.disconnect();
       root.classList.remove('motion');
     };
-  }, []);
+  }, [page]);
 }

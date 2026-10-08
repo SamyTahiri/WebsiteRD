@@ -1,7 +1,7 @@
 import SplitWords from '../SplitWords/SplitWords';
 import './Chapter.scss';
 
-// Coral panel with the chapter title on the left, content on the right.
+// Yellow panel with the chapter title on the left, content on the right.
 function Chapter({ id, number, title, subtitle, children }) {
   return (
     <section className="chapter" id={id} aria-labelledby={`${id}-title`}>

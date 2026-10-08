@@ -17,8 +17,8 @@
     margin-inline: -6px;
     color: inherit;
     text-decoration: none;
-    // Coral sweep on hover.
-    background: linear-gradient($color-coral, $color-coral) no-repeat 0 0 / 0 100%;
+    // Yellow sweep on hover.
+    background: linear-gradient($color-yellow, $color-yellow) no-repeat 0 0 / 0 100%;
 
     @include respond-to(sm) {
       grid-template-columns: 6.5rem minmax(0, 1fr) auto;

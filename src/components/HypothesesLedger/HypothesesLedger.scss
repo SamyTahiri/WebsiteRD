@@ -10,7 +10,7 @@
     align-items: end;
     gap: 20px;
     padding-block: $panel-padding;
-    background: $color-coral;
+    background: $color-yellow;
     border-bottom: $rule;
 
     p {
@@ -47,7 +47,7 @@
 
   &__id {
     font-size: clamp(2.4rem, 4vw, 3.4rem);
-    color: $color-coral-deep;
+    color: $color-yellow-deep;
 
     .ledger__row--first & {
       color: $color-ink;
@@ -100,7 +100,7 @@
     width: 0.6em;
     height: 0.6em;
     margin-right: 0.6em;
-    background: $color-coral;
+    background: $color-yellow;
     animation: badge-blink 1.4s steps(1) infinite;
   }
 }

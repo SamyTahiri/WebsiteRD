@@ -5,7 +5,7 @@ import './Intro.scss';
 const COUNT_DURATION = 900;
 const LEAVE_DURATION = 1000;
 
-// Ink curtain with a 000 → 100 counter, lifted to reveal the page. Plays once per session.
+// Ink curtain with a 000 → 100 counter, lifted to reveal the page. Plays on every load.
 function Intro() {
   const [phase, setPhase] = useState(() => (isIntroPlaying() ? 'counting' : 'done'));
   const [count, setCount] = useState(0);
