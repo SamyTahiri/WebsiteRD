@@ -1,5 +1,5 @@
 export const TESTS_DOC_URL =
-  'https://docs.google.com/document/d/12o9YAPkjacXKDHhIrlNSZxjUvwi0orZ9X83kHwSho5k/edit?tab=t.86c2elaiq4d8';
+  'https://docs.google.com/document/d/12X4q3nvKcYIpK_MRMevnrs6ZAdNB2RF89S4t8oqWv1c/edit?usp=sharing';
 
 // 31 octobre 2026 (les mois commencent à 0).
 export const DEADLINE = new Date(2026, 9, 31);
