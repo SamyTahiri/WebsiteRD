@@ -47,7 +47,7 @@ src/
 │   ├── HypothesesLedger/ # Chapter 4, the H.1 → H.14 list
 │   ├── SolutionList/     # Chapter 5, each row opens its tracking tab
 │   ├── Ticker/           # Scrolling band of project terms
-│   ├── Epilogue/         # 31.10.2026 objective + countdown
+│   ├── Epilogue/         # 28.11.2026 objective (Ottawa) + countdown
 │   ├── SolutionTracker/  # Chapter 6, one tab per solution
 │   ├── StatusChip/
 │   └── Footer/

@@ -9,7 +9,7 @@ function Hero() {
       </h1>
       <p className="hero__intro">
         Un projet de recherche et développement pour comprendre pourquoi notre robot ne sait pas
-        toujours où il se trouve, et pour corriger le problème avant la STEMley Cup.
+        toujours où il se trouve, et pour corriger le problème avant la compétition d’Ottawa du 28 novembre.
       </p>
     </section>
   );

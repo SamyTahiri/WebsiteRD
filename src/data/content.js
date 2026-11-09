@@ -1,8 +1,8 @@
 export const TESTS_DOC_URL =
   'https://docs.google.com/document/d/12o9YAPkjacXKDHhIrlNSZxjUvwi0orZ9X83kHwSho5k/edit?usp=sharing';
 
-// 31 octobre 2026 (les mois commencent à 0).
-export const DEADLINE = new Date(2026, 9, 31);
+// 28 novembre 2026, compétition d’Ottawa (les mois commencent à 0).
+export const DEADLINE = new Date(2026, 10, 28);
 
 export const chapters = [
   { id: 'tests', label: 'Ch.1', title: 'Les tests', figure: 'trajectory', caption: 'fig. 1, trajectoire' },
@@ -407,6 +407,6 @@ export const tickerItems = [
   'Pigeon 2.0 → NavX3',
   '2 × Limelight 3G',
   'Caractérisation du swerve',
-  'STEMley Cup',
-  '31.10.2026',
+  'Ottawa',
+  '28.11.2026',
 ];

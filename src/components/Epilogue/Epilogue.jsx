@@ -5,7 +5,7 @@ import { useInView } from '@/hooks/useInView';
 import { useAnimatedNumber } from '@/hooks/useAnimatedNumber';
 import './Epilogue.scss';
 
-const DATE_TEXT = '31.10.2026';
+const DATE_TEXT = '28.11.2026';
 
 function Epilogue() {
   const countRef = useRef(null);
@@ -33,7 +33,7 @@ function Epilogue() {
           proches possible d’une compétition.
         </p>
         <span className="epilogue__event display" ref={countRef}>
-          STEMley Cup · J-<span className="epilogue__count">{shownDays}</span>
+          Ottawa · J-<span className="epilogue__count">{shownDays}</span>
           <span className="visually-hidden"> ({daysLeft} jours restants)</span>
         </span>
       </div>
