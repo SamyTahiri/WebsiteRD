@@ -12,7 +12,7 @@ function HypothesesLedger() {
             <SplitWords text="Hypothèses" />
           </h2>
         </div>
-        <p>Huit causes possibles de nos problèmes de vision, testées une à la fois.</p>
+        <p>Quatorze causes possibles de nos problèmes de vision, testées une à la fois.</p>
       </div>
       <ol className="ledger__list">
         {hypotheses.map((hypothesis, i) => (

@@ -44,7 +44,7 @@ src/
 │   ├── Chapter/          # Coral panel + content (chapters 1, 2, 3, 5)
 │   ├── SplitWords/       # Titles that rise word by word
 │   ├── Entries/          # Ruled label / text list
-│   ├── HypothesesLedger/ # Chapter 4, the H.1 → H.8 list
+│   ├── HypothesesLedger/ # Chapter 4, the H.1 → H.14 list
 │   ├── SolutionList/     # Chapter 5, each row opens its tracking tab
 │   ├── Ticker/           # Scrolling band of project terms
 │   ├── Epilogue/         # 31.10.2026 objective + countdown

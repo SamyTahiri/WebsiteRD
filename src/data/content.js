@@ -63,6 +63,36 @@ export const hypotheses = [
   },
   { id: 'H.7', title: 'Le filtre circulaire', note: 'Le filtre actuel trierait mal les mesures.' },
   { id: 'H.8', title: 'Blacklist = not whitelist', note: "Notre blacklist n’en est pas une vraie." },
+  {
+    id: 'H.9',
+    title: 'Inclinaison sur la bump',
+    note: 'Les roues glissent ou décollent, et la vision est acceptée alors que MT2 suppose un robot à plat.',
+  },
+  {
+    id: 'H.10',
+    title: 'Boost vision actif pendant l’autonome',
+    note: 'isDisabled n’est remis à faux qu’en téléop : le boost reste allumé, sans aucun filtre.',
+  },
+  {
+    id: 'H.11',
+    title: 'Images appliquées dans le désordre',
+    note: 'Une image plus vieille efface les corrections plus récentes dans l’estimateur.',
+  },
+  {
+    id: 'H.12',
+    title: 'Limite de rotation trop haute',
+    note: '720°/s, la vitesse max du robot : le filtre ne rejette presque jamais.',
+  },
+  {
+    id: 'H.13',
+    title: 'Odométrie à 50 Hz non synchronisée',
+    note: 'Une lecture par boucle, et le gyroscope et les roues lus à des moments différents.',
+  },
+  {
+    id: 'H.14',
+    title: 'Aucun filtre hors terrain ni distance',
+    note: 'Des poses hors du terrain ou à plus de 4,5 m des tags sont acceptées.',
+  },
 ];
 
 // ---------------------------------------------------------------------------
@@ -164,6 +194,122 @@ export const solutionTracks = [
     results: EMPTY_RESULTS,
   },
   {
+    id: 'pr3',
+    label: 'Pour H.2, H.5, H.6, H.10, H.11, H.14',
+    title: 'Pipeline du PR #3',
+    name: 'Fusionner le nouveau pipeline de vision (PR #3)',
+    hypothesis: 'MT1 envoyé dans MT2 sans filtrage',
+    status: 'en-cours',
+    summary:
+      'Chaque image passe une liste de filtres, et chaque rejet est enregistré avec sa raison. Le cap vient seulement des images à 2 tags ou plus, et le boost est retiré.',
+    steps: [
+      {
+        title: 'Corriger les tests en français',
+        status: 'a-faire',
+        text: 'String.format(Locale.ROOT, …) : 4 tests échouent à cause de la virgule décimale.',
+      },
+      {
+        title: 'Limiter la pose de départ en autonome',
+        status: 'a-faire',
+        text: 'Au-delà d’environ 10° ou 1 m, garder la pose de départ du mode autonome.',
+      },
+      {
+        title: 'Obtenir la revue écrite',
+        status: 'en-cours',
+        text: 'Les changements demandés par Arnaud, par écrit.',
+      },
+      ...standardSteps('Fusionner le PR #3 sur la branche 2027.'),
+    ],
+    log: [
+      {
+        tag: 'Revue',
+        text: '72 tests sur 72 passent en anglais, et le PR fusionne sans conflit avec la branche 2027.',
+      },
+      { tag: 'Revue', text: 'Un test confirme que MT1 et MT2 de la même image sont tous les deux appliqués.' },
+    ],
+    results: EMPTY_RESULTS,
+  },
+  {
+    id: 'matrice',
+    label: 'Pour H.4',
+    title: 'Matrice de confiance',
+    name: 'Plus de confiance en l’odométrie, 50/50 près des tags',
+    hypothesis: 'Matrice de l’estimateur trop confiante en la vision',
+    status: 'a-venir',
+    summary:
+      'Jamais de cap avec un seul tag. Roues plus strictes en x, y (0,02 m) et plus souples en cap (0,01 rad). 50/50 à moins de 2 m, puis la vision compte de moins en moins, et rien au-delà de 4,5 m.',
+    steps: standardSteps(
+      'σ_xy = max(0,02 ; 0,02 · (d/2)⁴ / √tags), limite de distance à 4,5 m pour 1 tag et pour 2 tags ou plus.',
+    ),
+    log: [
+      { tag: 'Décision', text: 'Jamais de cap avec un seul tag : déjà fait dans le PR #3.' },
+      { tag: 'Décision', text: 'K = 0,5 par image à moins de 2 m, 0,06 à 4 m avec un tag, rejet au-delà de 4,5 m.' },
+    ],
+    results: EMPTY_RESULTS,
+  },
+  {
+    id: 'inclinaison',
+    label: 'Pour H.9',
+    title: 'Inclinaison',
+    name: 'Détecter l’inclinaison (6328) et corriger après la bump (1678)',
+    hypothesis: 'Inclinaison sur la bump',
+    status: 'a-venir',
+    summary:
+      'Mesurer l’inclinaison avec la formule de 6328, bloquer la vision pendant la bump, puis faire plus confiance à la vision juste après, comme 1678.',
+    steps: [
+      {
+        title: 'Mesurer l’inclinaison',
+        status: 'a-faire',
+        text: 'inclinaison = acos(cos(tangage) · cos(roulis)), enregistrée avec l’heure à chaque boucle.',
+      },
+      {
+        title: 'Rejeter les images inclinées',
+        status: 'a-faire',
+        text: 'Selon l’heure de capture : plus de 4 à 5° dans les 0,15 s avant l’image.',
+      },
+      {
+        title: 'Plus de confiance après la bump',
+        status: 'a-faire',
+        text: 'σ_xy × 0,3 pour MT2 à 2 tags ou plus, jamais pour le cap, jusqu’à 2 ou 3 images acceptées ou 2 s.',
+      },
+      ...standardSteps('').slice(1),
+    ],
+    log: [
+      {
+        tag: 'Décision',
+        text: 'L’ancien boost à la sortie de la bump (PR #158) est abandonné : il boostait les images prises pendant la bump.',
+      },
+    ],
+    results: EMPTY_RESULTS,
+  },
+  {
+    id: 'rotation',
+    label: 'Pour H.12',
+    title: 'Limite de rotation',
+    name: 'Baisser la limite de rotation de la vision',
+    hypothesis: 'Limite de rotation trop haute',
+    status: 'a-venir',
+    summary: 'Rejeter les images quand le robot tourne vite, comme 1114 (60°/s) et 254 (100°/s).',
+    steps: standardSteps('Baisser la limite à environ 100–120°/s, idéalement selon la vitesse au moment de l’image.'),
+    log: [],
+    results: EMPTY_RESULTS,
+  },
+  {
+    id: 'odometrie',
+    label: 'Pour H.13',
+    title: 'Odométrie synchronisée',
+    name: 'Lire le gyroscope et les roues ensemble, puis plus souvent',
+    hypothesis: 'Odométrie à 50 Hz non synchronisée',
+    status: 'a-venir',
+    summary:
+      'D’abord lire tous les signaux en même temps, puis un thread d’odométrie à 250 Hz comme 1114 et 6328.',
+    steps: standardSteps(
+      'BaseStatusSignal.refreshAll sur le gyroscope et les roues, puis un thread d’odométrie avec l’heure de chaque lecture.',
+    ),
+    log: [],
+    results: EMPTY_RESULTS,
+  },
+  {
     id: 'filtre-mt1',
     label: 'Pour H.6',
     title: 'Filtrer MT1',
@@ -172,7 +318,12 @@ export const solutionTracks = [
     status: 'a-venir',
     summary: 'Ne plus envoyer de mesures MegaTag1 non filtrées dans MegaTag2.',
     steps: standardSteps('Ajouter un filtre sur MT1 avant qu’il soit envoyé dans MT2.'),
-    log: [],
+    log: [
+      {
+        tag: 'Analyse',
+        text: 'Le code de base envoyait le cap MT1 de la caméra à MT2. Le PR #3 envoie le cap de l’estimateur à la place.',
+      },
+    ],
     results: EMPTY_RESULTS,
   },
   {
@@ -184,7 +335,12 @@ export const solutionTracks = [
     status: 'a-venir',
     summary: 'Remplacer le filtre circulaire par un tri basé sur l’ambiguïté de chaque détection.',
     steps: standardSteps('Retirer le filtre circulaire et filtrer selon l’ambiguïté de la détection.'),
-    log: [],
+    log: [
+      {
+        tag: 'Analyse',
+        text: '6328 et 4481 choisissent la solution la plus proche du cap actuel ; 254 rejette au-dessus de 0,19. Le PR #3 évite le problème en refusant MT1 à un seul tag.',
+      },
+    ],
     results: EMPTY_RESULTS,
   },
   {
@@ -208,7 +364,12 @@ export const solutionTracks = [
     status: 'a-venir',
     summary: 'Essayer PhotonVision comme solution de vision.',
     steps: standardSteps('Passer la vision du robot sur PhotonVision.'),
-    log: [],
+    log: [
+      {
+        tag: 'Analyse',
+        text: '4481 et 5940 utilisent le multi-tag de PhotonVision pour le cap. MT1 à 2 tags ou plus suit la même idée sur Limelight.',
+      },
+    ],
     results: EMPTY_RESULTS,
   },
   {
