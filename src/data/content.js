@@ -246,7 +246,7 @@ export const solutionTracks = [
   },
   {
     id: 'filtres',
-    label: 'Étape 2 · Pour H.2, H.12, H.14',
+    label: 'Étape 2 · Pour H.2, H.7, H.12, H.14',
     title: 'Filtres plus sûrs',
     name: 'Refuser les images peu fiables',
     hypothesis: 'Aucun filtre hors terrain ni distance',
@@ -279,9 +279,19 @@ export const solutionTracks = [
         status: 'a-faire',
         text: 'Le saut de 1,40 m avec ses compteurs 38 / 16, qui comptait les estimations et non le temps.',
       },
+      {
+        title: 'Retirer le filtre circulaire',
+        status: 'a-faire',
+        text: 'Le cercle de Vision.java, MAX_TARGET_DISTANCE et withMaxTargetDistance. Il choisissait les tags selon la pose estimée : si elle est fausse, la caméra ne voit plus les tags qui la corrigeraient. La limite de 4,5 m le remplace.',
+      },
       ...standardSteps('').slice(1),
     ],
-    log: [],
+    log: [
+      {
+        tag: 'Décision',
+        text: 'Le filtre circulaire entre en conflit avec notre logique : il se base sur la pose qu’on cherche à corriger. On le retire ici, et l’ancienne étape sur l’ambiguïté n’a plus lieu d’être, puisque MT1 à un seul tag est refusé.',
+      },
+    ],
     results: EMPTY_RESULTS,
   },
   {
@@ -475,26 +485,8 @@ export const solutionTracks = [
     results: EMPTY_RESULTS,
   },
   {
-    id: 'ambiguite',
-    label: 'Étape 10 · Après Ottawa · Pour H.7',
-    title: 'Filtre circulaire',
-    name: 'Retirer le filtre circulaire, ou le remplacer par l’ambiguïté',
-    hypothesis: 'Le filtre circulaire',
-    status: 'a-venir',
-    summary:
-      'Le filtre circulaire est encore dans le code mais aucune caméra ne l’active. Après l’étape 2, plus aucun cap ne vient d’un seul tag : à décider s’il sert encore.',
-    steps: standardSteps('Retirer le filtre circulaire, ou filtrer selon l’ambiguïté de la détection.'),
-    log: [
-      {
-        tag: 'Analyse',
-        text: '6328 et 4481 choisissent la solution la plus proche du cap actuel ; 254 rejette au-dessus de 0,19. Le PR #3 évite le problème en refusant MT1 à un seul tag.',
-      },
-    ],
-    results: EMPTY_RESULTS,
-  },
-  {
     id: 'blacklist',
-    label: 'Étape 11 · Après Ottawa · Pour H.8',
+    label: 'Étape 10 · Après Ottawa · Pour H.8',
     title: 'Vraie blacklist',
     name: 'Faire une vraie blacklist, et retirer les tags trop loin un par un',
     hypothesis: 'Blacklist = not whitelist',
@@ -507,7 +499,7 @@ export const solutionTracks = [
   },
   {
     id: 'photonvision',
-    label: 'Étape 12 · Après Ottawa',
+    label: 'Étape 11 · Après Ottawa',
     title: 'PhotonVision',
     name: 'Essayer PhotonVision',
     hypothesis: null,
@@ -524,7 +516,7 @@ export const solutionTracks = [
   },
   {
     id: 'cameras',
-    label: 'Étape 13 · Après Ottawa',
+    label: 'Étape 12 · Après Ottawa',
     title: 'Combiner les caméras',
     name: 'Combiner les types de caméras',
     hypothesis: null,
@@ -536,7 +528,7 @@ export const solutionTracks = [
   },
   {
     id: 'pipelines',
-    label: 'Étape 14 · Après Ottawa',
+    label: 'Étape 13 · Après Ottawa',
     title: 'Pipelines dynamiques',
     name: 'Des pipelines dynamiques selon notre état actuel',
     hypothesis: null,
