@@ -67,7 +67,7 @@ function Home() {
 
       <HypothesesLedger />
 
-      <Chapter id="solutions" number={5} title="Solutions" subtitle="Douze pistes pour la suite">
+      <Chapter id="solutions" number={5} title="Solutions" subtitle="Quinze étapes, dans l’ordre">
         <p>
           Clique sur une solution pour voir son suivi : ce qu’on a fait, où on en est et ce qui
           reste.
