@@ -204,38 +204,61 @@ export const solutionTracks = [
     title: 'Pipeline et suivi',
     name: 'Porter le pipeline du PR #3 et retirer le boost',
     hypothesis: 'Images appliquées dans le désordre',
-    status: 'a-venir',
+    status: 'en-cours',
     summary:
-      'Chaque image passe une liste de filtres, et chaque rejet est enregistré avec sa raison. On garde les limites actuelles de StemleyBot pour cette étape : seul le fonctionnement change.',
+      'Chaque image passe une liste de filtres, et chaque rejet est enregistré avec sa raison. On garde les limites actuelles de StemleyBot pour cette étape : seul le fonctionnement change. Le code est sur la branche vision-ottawa, il reste à le tester sur le robot.',
     steps: [
       {
         title: 'Copier les fichiers du PR #3',
-        status: 'a-faire',
-        text: 'Les 18 fichiers de frc/lib/vision (pipeline, filtres, HeadingSeeder, Relocalizer) et VisionTelemetry : ils n’existent pas encore dans StemleyBot.',
+        status: 'fait',
+        text: 'Le pipeline, les filtres, HeadingSeeder, Relocalizer, VisionTelemetry et leurs tests. Les filtres des étapes suivantes sont là, mais Localization ne les utilise pas encore.',
       },
       {
         title: 'Brancher le nouveau pipeline',
-        status: 'a-faire',
-        text: 'Localization, Vision, Robot et RobotContainer : lire toutes les images de la file, MT1 et MT2 de la même image, triées par heure de capture.',
+        status: 'fait',
+        text: 'Localization, Vision, Robot et RobotContainer : lire toutes les images de la file, MT1 et MT2 de la même image, triées par heure de capture. Les anciens filtres sont devenus des filtres du pipeline, avec les mêmes valeurs.',
       },
       {
         title: 'Retirer le boost',
-        status: 'a-faire',
-        text: 'Le bouton, le verrou isDisabled qui le laissait allumé en autonome, BOOST_VISION_MATRIX et le contournement des filtres.',
+        status: 'fait',
+        text: 'Le bouton, le verrou isDisabled qui le laissait allumé en autonome, BOOST_VISION_MATRIX et le contournement des filtres, aussi dans les autonomes (AlignForShoot).',
       },
       {
         title: 'Retirer le code inutile',
-        status: 'a-faire',
+        status: 'fait',
         text: 'Le 2e estimateur poseEstimatorVis et les constantes inutilisées (VISION_CONFIDENT_MAT, MADVANTAGE_*, IGNORE_MATRIX).',
       },
       {
         title: 'Corriger les tests en français',
+        status: 'fait',
+        text: 'String.format(Locale.ROOT, …) : les tests passent en français comme en anglais.',
+      },
+      {
+        title: 'Réparer RejectJumpsTest',
         status: 'a-faire',
-        text: 'String.format(Locale.ROOT, …) : sinon 4 tests échouent à cause de la virgule décimale.',
+        text: 'Ligne 15 : () -> enabled lit la variable avant sa déclaration, donc ./gradlew build échoue. Avec () -> this.enabled, les 88 tests passent. Le deploy marche quand même : il ne compile pas les tests.',
+      },
+      {
+        title: 'Tester les autonomes',
+        status: 'a-faire',
+        text: 'rightFarSimpleSwipe et leftFarSimpleSwipe : avant, le boost restait allumé en autonome, la vision comptait beaucoup et le filtre de saut était coupé. Ce n’est plus le cas.',
+      },
+      {
+        title: 'Tester le cap désactivé',
+        status: 'a-faire',
+        text: 'Démarrer le robot tourné de 180°, le laisser désactivé devant des tags et suivre Localization/Robot Pose Theta. Sans le boost, le cap se corrige en 15 à 30 s avec 2 tags à 2 m, plus lentement s’ils sont loin.',
       },
       ...standardSteps('').slice(1),
     ],
     log: [
+      {
+        tag: 'Revue',
+        text: '11 novembre : la branche vision-ottawa porte le pipeline du PR #3 avec les anciens filtres (720°/s, MT1 à 1 tag jusqu’à 3 m, saut de 1,40 m, σ = 0,15 · d^1,8 / tags, roues 0,05 m et 0,0002°). Bonne base pour l’étape 1.',
+      },
+      {
+        tag: 'Analyse',
+        text: 'Sans le boost, le cap ne se recale plus vite quand le robot est désactivé. Les autonomes qui placent la pose au départ du trajet ne sont pas touchés. Pour les pratiques sans autonome, l’étape 4 (recaler le cap) règle ça.',
+      },
       {
         tag: 'Revue',
         text: 'Sur TechSwerves2027, 72 tests sur 72 passent en anglais, et le PR fusionne sans conflit avec la branche 2027.',
@@ -290,6 +313,10 @@ export const solutionTracks = [
       {
         tag: 'Décision',
         text: 'Le filtre circulaire entre en conflit avec notre logique : il se base sur la pose qu’on cherche à corriger. On le retire ici, et l’ancienne étape sur l’ambiguïté n’a plus lieu d’être, puisque MT1 à un seul tag est refusé.',
+      },
+      {
+        tag: 'Analyse',
+        text: 'Les filtres sont déjà sur vision-ottawa (RejectSingleTagMT1, RejectSpinning, RejectOutsideField, RejectTagsOutOfView, RejectTooFar) : il reste à les brancher dans Localization. RejectTooFar garde les valeurs du PR #3 (4 m pour 1 tag, 6 m pour 2 ou plus) : les mettre à 4,5 m.',
       },
     ],
     results: EMPTY_RESULTS,
@@ -360,7 +387,12 @@ export const solutionTracks = [
       },
       ...standardSteps('').slice(1),
     ],
-    log: [],
+    log: [
+      {
+        tag: 'Analyse',
+        text: 'HeadingSeeder et Relocalizer sont déjà sur vision-ottawa, avec leurs tests, mais pas branchés. Le départ de l’autonome du PR #3 n’a pas de limite : il faut ajouter celle de 10° / 1 m.',
+      },
+    ],
     results: EMPTY_RESULTS,
   },
   {
