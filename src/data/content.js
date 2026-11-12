@@ -206,7 +206,7 @@ export const solutionTracks = [
     hypothesis: 'Images appliquées dans le désordre',
     status: 'en-cours',
     summary:
-      'Chaque image passe une liste de filtres, et chaque rejet est enregistré avec sa raison. On garde les limites actuelles de StemleyBot pour cette étape : seul le fonctionnement change. Le code est sur la branche vision-ottawa, il reste à le tester sur le robot.',
+      'Chaque image passe une liste de filtres, et chaque rejet est enregistré avec sa raison. On garde les limites actuelles de StemleyBot pour cette étape : seul le fonctionnement change. Le code est sur la branche vision-ottawa, avec les corrections de la revue du 12 novembre. Il reste à le tester sur le robot.',
     steps: [
       {
         title: 'Copier les fichiers du PR #3',
@@ -235,8 +235,23 @@ export const solutionTracks = [
       },
       {
         title: 'Réparer RejectJumpsTest',
-        status: 'a-faire',
-        text: 'Ligne 15 : () -> enabled lit la variable avant sa déclaration, donc ./gradlew build échoue. Avec () -> this.enabled, les 88 tests passent. Le deploy marche quand même : il ne compile pas les tests.',
+        status: 'fait',
+        text: 'Corrigé par Raphaël (() -> this.enabled). Le filtre de saut a ensuite été retiré à l’étape 2, avec son test.',
+      },
+      {
+        title: 'Rejeter les images en retard d’une boucle',
+        status: 'fait',
+        text: 'Nouveau filtre RejectOlderThanFused : l’estimateur de WPILib efface toutes les corrections plus récentes qu’une image ajoutée. Une image de la caméra la plus lente qui arrive une boucle en retard est donc refusée au lieu d’effacer la correction plus récente.',
+      },
+      {
+        title: 'Vérifier l’âge des images en premier',
+        status: 'fait',
+        text: 'RejectBadAge (0,3 s) passe avant tous les autres filtres, et la rotation est jugée au moment où l’image a été prise (historique du gyroscope sur 1,5 s).',
+      },
+      {
+        title: 'Alerte pour une caméra qui envoie des images cassées',
+        status: 'fait',
+        text: 'Seules les images utilisables comptent comme signe de vie. Les images cassées (erreur de décodage, pose manquante, NaN) sont comptées dans Vision/<caméra>/Broken estimates.',
       },
       {
         title: 'Tester les autonomes',
@@ -264,6 +279,10 @@ export const solutionTracks = [
         text: 'Sur TechSwerves2027, 72 tests sur 72 passent en anglais, et le PR fusionne sans conflit avec la branche 2027.',
       },
       { tag: 'Revue', text: 'Un test confirme que MT1 et MT2 de la même image sont tous les deux appliqués.' },
+      {
+        tag: 'Revue',
+        text: '12 novembre : revue d’un coéquipier, 5 points vérifiés et corrigés : le cap au démarrage (étape 4), les images en retard, l’âge des images, le filtre de saut partagé (retiré à l’étape 2) et les alertes de caméra. 97 tests passent.',
+      },
     ],
     results: EMPTY_RESULTS,
   },
@@ -273,38 +292,38 @@ export const solutionTracks = [
     title: 'Filtres plus sûrs',
     name: 'Refuser les images peu fiables',
     hypothesis: 'Aucun filtre hors terrain ni distance',
-    status: 'a-venir',
+    status: 'en-cours',
     summary:
       'Jamais de cap avec un seul tag, pas d’images quand le robot tourne vite, pas de tags au-delà de 4,5 m et pas de positions hors du terrain.',
     steps: [
       {
         title: 'Refuser MT1 avec un seul tag',
-        status: 'a-faire',
+        status: 'fait',
         text: 'Remplace la règle actuelle : un tag jusqu’à 3 m avec une ambiguïté de 0,7.',
       },
       {
         title: 'Limite de rotation à 100°/s',
-        status: 'a-faire',
-        text: 'Remplace 720°/s, la vitesse max du robot. 1114 utilise 60°/s et 254 100°/s.',
+        status: 'fait',
+        text: 'Remplace 720°/s, la vitesse max du robot. 1114 utilise 60°/s et 254 100°/s. S’applique à MT1 et MT2.',
       },
       {
         title: 'Refuser les positions hors du terrain',
-        status: 'a-faire',
-        text: 'Bord du terrain + 0,25 m, et refuser une image si la caméra n’aurait pas pu voir un de ses tags depuis cette position.',
+        status: 'fait',
+        text: 'Bord du terrain + 0,25 m.',
       },
       {
         title: 'Refuser les tags au-delà de 4,5 m',
-        status: 'a-faire',
-        text: 'Pour 1 tag comme pour 2 tags ou plus, selon la distance moyenne des tags.',
+        status: 'fait',
+        text: 'Pour 1 tag comme pour 2 tags ou plus, selon la distance moyenne mesurée par la caméra dans l’image, pas selon la pose estimée.',
       },
       {
         title: 'Retirer l’ancien filtre de saut',
-        status: 'a-faire',
+        status: 'fait',
         text: 'Le saut de 1,40 m avec ses compteurs 38 / 16, qui comptait les estimations et non le temps.',
       },
       {
         title: 'Retirer le filtre circulaire',
-        status: 'a-faire',
+        status: 'fait',
         text: 'Le cercle de Vision.java, MAX_TARGET_DISTANCE et withMaxTargetDistance. Il choisissait les tags selon la pose estimée : si elle est fausse, la caméra ne voit plus les tags qui la corrigeraient. La limite de 4,5 m le remplace.',
       },
       ...standardSteps('').slice(1),
@@ -318,6 +337,18 @@ export const solutionTracks = [
         tag: 'Analyse',
         text: 'Les filtres sont déjà sur vision-ottawa (RejectSingleTagMT1, RejectSpinning, RejectOutsideField, RejectTagsOutOfView, RejectTooFar) : il reste à les brancher dans Localization. RejectTooFar garde les valeurs du PR #3 (4 m pour 1 tag, 6 m pour 2 ou plus) : les mettre à 4,5 m.',
       },
+      {
+        tag: 'Décision',
+        text: '12 novembre : on retire le filtre de saut. Aucune grande équipe n’en utilise (6328, 254 en 2025, 1678, 4481, 5940) : il se base sur la pose qu’il doit corriger, et un seul compteur servait toutes les caméras.',
+      },
+      {
+        tag: 'Décision',
+        text: 'On ne refuse pas les images selon le champ de vision de la caméra (RejectTagsOutOfView) : le filtre reste dans la librairie, mais il n’est pas utilisé.',
+      },
+      {
+        tag: 'Analyse',
+        text: 'Comme les grandes équipes, la limite de distance vient de la caméra elle-même (1114 : moyenne ≤ 5,5 m ; 4481 : tag le plus loin ≤ 5 ou 6 m ; 5940 : chaque tag ≤ 5 m). Aucune ne filtre selon la pose estimée comme le filtre circulaire.',
+      },
     ],
     results: EMPTY_RESULTS,
   },
@@ -327,19 +358,29 @@ export const solutionTracks = [
     title: 'Matrice de confiance',
     name: 'Plus de confiance en l’odométrie, 50/50 près des tags',
     hypothesis: 'Matrice de l’estimateur trop confiante en la vision',
-    status: 'a-venir',
+    status: 'en-cours',
     summary:
-      'Roues plus strictes en x, y (0,02 m) et plus souples en cap (0,01 rad). 50/50 à moins de 2 m, puis la vision compte de moins en moins. Dernière étape à faire absolument avant Ottawa.',
+      'Roues plus strictes en x, y (0,02 m) et plus souples en cap (0,01 rad). Vision en x, y avec la forme de 1678 : 50/50 à 2,5 m, plus de vision en se rapprochant, plus d’odométrie en s’éloignant. Pas de cap par la vision pendant le match. Dernière étape à faire absolument avant Ottawa.',
     steps: [
       {
         title: 'Changer la confiance des roues',
-        status: 'a-faire',
+        status: 'fait',
         text: '0,02 m en x, y (au lieu de 0,05) et 0,01 rad pour le cap (au lieu de 0,0002°).',
       },
       {
         title: 'Changer la formule de la vision',
+        status: 'fait',
+        text: 'σ_xy = 0,02 · max(d ; 0,25 m) / 2,5 au lieu de 0,15 · d^1,8 / tags. Part de la vision par image : 83 % à 0,5 m, 71 % à 1 m, 56 % à 2 m, 50 % à 2,5 m, 45 % à 3 m, 38 % à 4 m. Le 2,5 m est une seule constante (VISION_EQUALS_WHEELS_DISTANCE).',
+      },
+      {
+        title: 'Pas de cap par la vision pendant le match',
+        status: 'fait',
+        text: 'Comme 1678 : MT1 ne sert plus qu’au recalage du cap robot désactivé. Pendant le match, le gyroscope seul garde le cap. Sans ça, les roues à 0,01 rad donnaient 93 % de vision par image sur le cap.',
+      },
+      {
+        title: 'Mesurer les images par seconde',
         status: 'a-faire',
-        text: 'σ_xy = max(0,02 ; 0,02 · (d/2)⁴ / √tags) au lieu de 0,15 · d^1,8 / tags.',
+        text: 'Pour chaque caméra, dans les journaux. Les pourcentages sont par image : à 60 images/s, 70 % par image veut dire que la pose suit la vision presque tout de suite. Si la pose tremble près des tags, baisser le 2,5 m.',
       },
       {
         title: 'Envoyer le taux de rotation à MT2',
@@ -355,6 +396,14 @@ export const solutionTracks = [
       },
       {
         tag: 'Analyse',
+        text: 'Part de la vision par image (x, y, 1 tag à 2 m) : ancien StemleyBot 8,7 %, 6328 7 %, 1678 14 %, 4481 (2026) 4 %, 4481 (2025) 51 %, PR #3 32 %. La plupart des grandes équipes font plus confiance à l’odométrie ; 4481 (2025), 5940 et 2910 font plus confiance à la vision.',
+      },
+      {
+        tag: 'Décision',
+        text: '12 novembre : on prend la forme de base de 1678 (σ en ligne droite avec la distance, sans nombre de tags), réglée pour 50/50 à 2,5 m, et pas de cap par la vision en match. Remplace la formule max(0,02 ; 0,02 · (d/2)⁴ / √tags).',
+      },
+      {
+        tag: 'Analyse',
         text: 'StemleyBot envoie déjà le cap de l’estimateur à MT2 (H.6) ; il ne manque que le taux de rotation.',
       },
     ],
@@ -366,14 +415,14 @@ export const solutionTracks = [
     title: 'Pose avant le match',
     name: 'Recaler le cap et la position avant le match',
     hypothesis: null,
-    status: 'a-venir',
+    status: 'en-cours',
     summary:
       'Robot désactivé et immobile : le cap et la position se recalent sur 5 images qui concordent. Au départ de l’autonome, la vision ne remplace la pose de départ que si l’écart est petit.',
     steps: [
       {
         title: 'Recaler le cap',
-        status: 'a-faire',
-        text: '5 images MT1 d’une caméra, 2 tags ou plus, à moins de 2° les unes des autres.',
+        status: 'fait',
+        text: '5 images MT1 d’une caméra, 2 tags ou plus, à moins de 2° les unes des autres, robot désactivé et immobile ou cap jamais recalé. MT2 attend ce recalage. Le départ de l’autonome (setPose) compte aussi comme recalage. À vérifier sur le robot : Localization/Heading seed.',
       },
       {
         title: 'Recaler la position',
@@ -391,6 +440,14 @@ export const solutionTracks = [
       {
         tag: 'Analyse',
         text: 'HeadingSeeder et Relocalizer sont déjà sur vision-ottawa, avec leurs tests, mais pas branchés. Le départ de l’autonome du PR #3 n’a pas de limite : il faut ajouter celle de 10° / 1 m.',
+      },
+      {
+        tag: 'Revue',
+        text: '12 novembre : HeadingSeeder est branché. Sans le boost, un cap faux à 3 m avec 2 tags demandait environ 313 images pour être réduit de moitié, et la conduite en mode terrain utilise ce cap.',
+      },
+      {
+        tag: 'Analyse',
+        text: 'Recaler la position (Relocalizer) apporte peu : avec nos valeurs, chaque image MT2 corrige déjà 5 à 50 % de l’écart, donc x, y se recale en moins d’une seconde robot immobile. Il reste dans le code, pas branché.',
       },
     ],
     results: EMPTY_RESULTS,
